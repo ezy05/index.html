@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slot Machine Simplu</title>
+    <title>Slot Machine</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,17 +19,19 @@
             border-radius: 10px;
             display: inline-block;
             margin-top: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         #slot-machine {
             margin: 20px auto;
-            width: 300px;
-            height: 100px;
+            width: 320px;
+            height: 120px;
             display: flex;
             justify-content: space-around;
             align-items: center;
             border: 5px solid #ecf0f1;
             border-radius: 10px;
             background-color: #34495e;
+            position: relative;
         }
         .slot {
             font-size: 2em;
@@ -63,18 +65,53 @@
             font-size: 1.5em;
             margin-bottom: 20px;
         }
+        #template {
+            width: 340px;
+            height: 240px;
+            position: relative;
+            background-image: url('https://www.example.com/casino-machine-template.png'); /* URL-ul template-ului */
+            background-size: cover;
+            margin: 0 auto;
+        }
+        .slot-position {
+            position: absolute;
+        }
+        #slot1-position {
+            top: 60px;
+            left: 40px;
+        }
+        #slot2-position {
+            top: 60px;
+            left: 130px;
+        }
+        #slot3-position {
+            top: 60px;
+            left: 220px;
+        }
+        #balance-position {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #spin-button-position {
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     </style>
 </head>
 <body>
     <div id="container">
-        <h1>Slot Machine Simplu</h1>
-        <div id="balance">Balanță: 1000 lei</div>
-        <div id="slot-machine">
-            <div class="slot" id="slot1">7</div>
-            <div class="slot" id="slot2">7</div>
-            <div class="slot" id="slot3">7</div>
+        <h1>Slot Machine</h1>
+        <div id="template">
+            <div id="balance" class="slot-position" id="balance-position">Balanță: 1000 lei</div>
+            <div id="slot-machine">
+                <div class="slot slot-position" id="slot1-position" id="slot1">7</div>
+                <div class="slot slot-position" id="slot2-position" id="slot2">7</div>
+                <div class="slot slot-position" id="slot3-position" id="slot3">7</div>
+            </div>
+            <button id="spin-button" class="slot-position" id="spin-button-position">SPIN</button>
         </div>
-        <button id="spin-button">Învârtește</button>
         <div id="result"></div>
     </div>
 
