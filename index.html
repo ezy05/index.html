@@ -64,10 +64,21 @@
             height: 150px;
         }
 
-        #result, #history {
-            font-size: 20px;
+        #result {
+            font-size: 16px; /* Smaller font size for prediction result */
             font-weight: bold;
             color: yellow;
+            margin: 10px 0; /* Add some margin for better spacing */
+        }
+
+        #history {
+            font-size: 16px; /* Smaller font size for history */
+            font-weight: bold;
+            color: yellow;
+            white-space: pre-wrap; /* Ensure text wraps properly in history */
+            text-align: left; /* Align text to the left for better readability */
+            width: 80%; /* Limit width to make it more readable */
+            margin: 0 auto; /* Center the history text block */
         }
 
         .Btn {
