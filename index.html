@@ -5,56 +5,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Betting App</title>
     <style>
-        /* Include stilurile existente aici */
-        /* Adaugă stilurile pentru pagina de alegere bot */
-        .Btn {
-            /* Stilurile existente pentru butoane */
-            width: 200px;
-            height: 60px;
-            font-size: 20px;
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
         }
-        /* Alte stiluri existente */
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        input {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+        }
+
+        #result {
+            font-size: 16px; /* Smaller font size for prediction result */
+            font-weight: bold;
+            color: yellow;
+            margin: 10px 0; /* Add some margin for better spacing */
+        }
+
+        #history {
+            font-size: 16px; /* Smaller font size for history */
+            font-weight: bold;
+            color: yellow;
+            white-space: pre-wrap; /* Ensure text wraps properly in history */
+            text-align: left; /* Align text to the left for better readability */
+            width: 80%; /* Limit width to make it more readable */
+            margin: 0 auto; /* Center the history text block */
+        }
+
+        .Btn {
+            width: 140px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(to right, #77530a, #ffd277, #77530a, #77530a, #ffd277, #77530a);
+            background-size: 250%;
+            background-position: left;
+            color: white; /* Text color set to white */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition-duration: 1s;
+            overflow: hidden;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .Btn::before {
+            position: absolute;
+            content: "";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 97%;
+            height: 90%;
+            border-radius: 8px;
+            transition-duration: 1s;
+            background-color: rgba(0, 0, 0, 0.842);
+            background-size: 200%;
+            z-index: 0;
+        }
+
+        .Btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .Btn:hover {
+            background-position: right;
+            transition-duration: 1s;
+        }
+
+        .Btn:hover::before {
+            background-position: right;
+            transition-duration: 1s;
+        }
+
+        .Btn:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
     <div id="welcome-page" class="page active">
         <!-- Adjust image paths to the same directory -->
-        <img src="coin.png" class="background" alt="Welcome Background">
+        <img src="welcome.png" class="background" alt="Welcome Background">
         <div class="content center">
             <h1>Welcome to AI Betting!</h1>
+            <!-- Added activation key input -->
             <input type="text" id="activation-key" placeholder="Enter activation key">
             <button class="Btn" onclick="activateApp()"><span>Play Now</span></button>
             <p id="activation-error" style="color: red; display: none;">Invalid key. Please try again.</p>
         </div>
     </div>
 
-    <div id="bot-selection-page" class="page hidden">
+    <div id="main-page" class="page hidden">
         <!-- Adjust image paths to the same directory -->
-        <img src="coin.png" class="background" alt="Bot Selection Background">
+        <img src="app.png" class="background" alt="App Background">
         <div class="content center">
-            <h1>Select Your Bot</h1>
-            <button class="Btn" onclick="showCoinMinerBotPage()"><span>Coin Miner Bot</span></button>
-            <button class="Btn" onclick="showFootballPredictorBotPage()"><span>Football Predictor Bot</span></button>
-        </div>
-    </div>
-
-    <div id="coin-miner-bot-page" class="page hidden">
-        <!-- Adjust image paths to the same directory -->
-        <img src="coin.png" class="background" alt="Coin Miner Bot Background">
-        <div class="content center">
-            <!-- Add your Coin Miner Bot content here -->
-            <h1>Coin Miner Bot</h1>
-            <!-- Your Coin Miner Bot specific content goes here -->
-        </div>
-    </div>
-
-    <div id="football-predictor-bot-page" class="page hidden">
-        <!-- Adjust image paths to the same directory -->
-        <img src="coin.png" class="background" alt="Football Predictor Bot Background">
-        <div class="content center">
-            <!-- Add your Football Predictor Bot content here -->
-            <h1>Football Predictor Bot</h1>
-            <img src="logo.png" class="logo" alt="Football Predictor Bot Logo">
+            <img src="logo.png" class="logo" alt="App Logo">
             <p>Available Leagues:<br>
             - Romania<br>
             - France<br>
@@ -73,10 +174,10 @@
 
     <div id="history-page" class="page hidden">
         <!-- Adjust image paths to the same directory -->
-        <img src="coin.png" class="background" alt="History Background">
+        <img src="app.png" class="background" alt="App Background">
         <div class="content center">
             <button class="Btn" onclick="deleteHistory()"><span>Delete History</span></button>
-            <button class="Btn" onclick="showFootballPredictorBotPage()"><span>Back</span></button>
+            <button class="Btn" onclick="showMainPage()"><span>Back</span></button>
             <pre id="history"></pre>
         </div>
     </div>
@@ -111,39 +212,19 @@
 
         function showWelcomePage() {
             document.getElementById('welcome-page').classList.add('active');
-            document.getElementById('bot-selection-page').classList.remove('active');
-            document.getElementById('coin-miner-bot-page').classList.remove('active');
-            document.getElementById('football-predictor-bot-page').classList.remove('active');
+            document.getElementById('main-page').classList.remove('active');
             document.getElementById('history-page').classList.remove('active');
         }
 
-        function showBotSelectionPage() {
+        function showMainPage() {
             document.getElementById('welcome-page').classList.remove('active');
-            document.getElementById('bot-selection-page').classList.add('active');
-            document.getElementById('coin-miner-bot-page').classList.remove('active');
-            document.getElementById('football-predictor-bot-page').classList.remove('active');
-            document.getElementById('history-page').classList.remove('active');
-        }
-
-        function showCoinMinerBotPage() {
-            document.getElementById('bot-selection-page').classList.remove('active');
-            document.getElementById('coin-miner-bot-page').classList.add('active');
-            document.getElementById('football-predictor-bot-page').classList.remove('active');
-            document.getElementById('history-page').classList.remove('active');
-        }
-
-        function showFootballPredictorBotPage() {
-            document.getElementById('bot-selection-page').classList.remove('active');
-            document.getElementById('coin-miner-bot-page').classList.remove('active');
-            document.getElementById('football-predictor-bot-page').classList.add('active');
+            document.getElementById('main-page').classList.add('active');
             document.getElementById('history-page').classList.remove('active');
         }
 
         function showHistoryPage() {
             document.getElementById('welcome-page').classList.remove('active');
-            document.getElementById('bot-selection-page').classList.remove('active');
-            document.getElementById('coin-miner-bot-page').classList.remove('active');
-            document.getElementById('football-predictor-bot-page').classList.remove('active');
+            document.getElementById('main-page').classList.remove('active');
             document.getElementById('history-page').classList.add('active');
             loadHistory();
         }
@@ -152,7 +233,7 @@
             const enteredKey = document.getElementById('activation-key').value.trim();
 
             if (enteredKey === activationKey) {
-                showBotSelectionPage();
+                showMainPage();
                 document.getElementById('activation-error').style.display = 'none';
             } else {
                 document.getElementById('activation-error').style.display = 'block';
@@ -188,28 +269,18 @@
 
         function saveResult(team1, team2, prediction) {
             let history = JSON.parse(localStorage.getItem('history')) || [];
-
-            history.push({
-                team1: team1,
-                team2: team2,
-                prediction: prediction,
-                date: new Date().toISOString()
-            });
-
+            history.push(`${team1.toUpperCase()} vs ${team2.toUpperCase()}: ${prediction}`);
             localStorage.setItem('history', JSON.stringify(history));
         }
 
         function loadHistory() {
             let history = JSON.parse(localStorage.getItem('history')) || [];
-            let historyElement = document.getElementById('history');
-            historyElement.textContent = history.map(entry => {
-                return `Date: ${new Date(entry.date).toLocaleString()}\nTeams: ${entry.team1.toUpperCase()} vs ${entry.team2.toUpperCase()}\nPrediction: ${entry.prediction}\n\n`;
-            }).join('') || 'No history available.';
+            document.getElementById('history').textContent = history.length > 0 ? history.join('\n') : 'No history available.';
         }
 
         function deleteHistory() {
             localStorage.removeItem('history');
-            loadHistory();
+            document.getElementById('history').textContent = 'History deleted.';
         }
     </script>
 </body>
