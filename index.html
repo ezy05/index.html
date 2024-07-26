@@ -3,285 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Betting App</title>
+    <title>Coin Tap Game</title>
     <style>
-        body, html {
+        body {
             margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
             font-family: Arial, sans-serif;
-        }
-
-        .page {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .background {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
-
-        .content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            color: white;
-            padding: 20px;
-        }
-
-        .center {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            height: 100vh;
+            background-image: url('poza.png');  /* Imaginea de fundal */
+            background-size: cover;
+            background-position: center;
         }
-
-        .hidden {
-            display: none;
+        #container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
+            width: 600px;  /* Lățime mai mare pentru a acomoda imaginea mare */
+            max-width: 90vw; /* Asigură că containerul se adaptează la dimensiunea ecranului */
         }
-
-        input {
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
-            width: 200px;
+        #coin {
+            width: 300px;  /* Dimensiune mare pentru imaginea monedei */
+            height: 300px;
+            cursor: pointer;
+            margin-top: 20px;  /* Spațiu deasupra imaginii */
         }
-
-        .logo {
-            width: 150px;
-            height: 150px;
-        }
-
-        #result {
-            font-size: 16px; /* Smaller font size for prediction result */
+        #balance {
+            font-size: 60px;  /* Dimensiune mare pentru textul balanței */
             font-weight: bold;
-            color: yellow;
-            margin: 10px 0; /* Add some margin for better spacing */
+            margin-bottom: 20px;  /* Spațiu sub balanță pentru a crea separare de textul mic */
         }
-
-        #history {
-            font-size: 16px; /* Smaller font size for history */
+        #tap-instruction {
+            font-size: 20px;  /* Dimensiune mai mică pentru textul de instrucțiuni */
+            color: #333;  /* Culoare textului */
+            margin-bottom: 40px;  /* Spațiu sub textul mic pentru a crea separare de imaginea monedei */
+        }
+        #start-button, #withdraw-button, #earn-more-button {
+            display: block;
+            margin: 10px auto;  /* Spațiu între butoane */
+            padding: 15px 30px;
+            font-size: 20px;
             font-weight: bold;
-            color: yellow;
-            white-space: pre-wrap; /* Ensure text wraps properly in history */
-            text-align: left; /* Align text to the left for better readability */
-            width: 80%; /* Limit width to make it more readable */
-            margin: 0 auto; /* Center the history text block */
-        }
-
-        .Btn {
-            width: 140px;
-            height: 40px;
+            color: #fff;
+            background-color: #007bff;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(to right, #77530a, #ffd277, #77530a, #77530a, #ffd277, #77530a);
-            background-size: 250%;
-            background-position: left;
-            color: white; /* Text color set to white */
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
-            transition-duration: 1s;
-            overflow: hidden;
-            margin: 10px;
+        }
+        #start-button:hover, #withdraw-button:hover, #earn-more-button:hover {
+            background-color: #0056b3;
+        }
+        #game-screen {
+            display: none;
+        }
+        #modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+        #modal-content input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #modal-content button {
             padding: 10px 20px;
             font-size: 16px;
             font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
         }
-
-        .Btn::before {
-            position: absolute;
-            content: "";
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 97%;
-            height: 90%;
-            border-radius: 8px;
-            transition-duration: 1s;
-            background-color: rgba(0, 0, 0, 0.842);
-            background-size: 200%;
-            z-index: 0;
+        #modal-content button:hover {
+            background-color: #0056b3;
         }
-
-        .Btn span {
-            position: relative;
-            z-index: 1;
+        #error-message, #success-message {
+            margin-top: 10px;
+            display: none;
         }
-
-        .Btn:hover {
-            background-position: right;
-            transition-duration: 1s;
+        #error-message {
+            color: red;
         }
-
-        .Btn:hover::before {
-            background-position: right;
-            transition-duration: 1s;
-        }
-
-        .Btn:active {
-            transform: scale(0.95);
+        #success-message {
+            color: green;
         }
     </style>
 </head>
 <body>
-    <div id="welcome-page" class="page active">
-        <!-- Adjust image paths to the same directory -->
-        <img src="welcome.png" class="background" alt="Welcome Background">
-        <div class="content center">
-            <h1>Welcome to AI Betting!</h1>
-            <!-- Added activation key input -->
-            <input type="text" id="activation-key" placeholder="Enter activation key">
-            <button class="Btn" onclick="activateApp()"><span>Play Now</span></button>
-            <p id="activation-error" style="color: red; display: none;">Invalid key. Please try again.</p>
+    <div id="container">
+        <div id="welcome-screen">
+            <h1>Welcome to Coin Tap Game!</h1>
+            <button id="start-button">Start Now</button>
+        </div>
+        <div id="game-screen">
+            <div id="balance">Balance: 100</div>
+            <div id="tap-instruction">TAP TAP THE COIN</div>
+            <img id="coin" src="coin.png" alt="Coin Image">
+            <button id="withdraw-button">Withdraw</button>
+            <button id="earn-more-button">Earn More</button>
         </div>
     </div>
 
-    <div id="main-page" class="page hidden">
-        <!-- Adjust image paths to the same directory -->
-        <img src="app.png" class="background" alt="App Background">
-        <div class="content center">
-            <img src="logo.png" class="logo" alt="App Logo">
-            <p>Available Leagues:<br>
-            - Romania<br>
-            - France<br>
-            - Italy<br>
-            - England<br>
-            - Germany<br>
-            - Spain<br>
-            - AND MORE...</p>
-            <input type="text" id="team1" placeholder="Home team">
-            <input type="text" id="team2" placeholder="Away team">
-            <button class="Btn" onclick="predict()"><span>Predict</span></button>
-            <p id="result">Prediction result will appear here</p>
-            <button class="Btn" onclick="showHistoryPage()"><span>View History</span></button>
-        </div>
-    </div>
-
-    <div id="history-page" class="page hidden">
-        <!-- Adjust image paths to the same directory -->
-        <img src="app.png" class="background" alt="App Background">
-        <div class="content center">
-            <button class="Btn" onclick="deleteHistory()"><span>Delete History</span></button>
-            <button class="Btn" onclick="showMainPage()"><span>Back</span></button>
-            <pre id="history"></pre>
+    <!-- Modal pentru retragere -->
+    <div id="modal">
+        <div id="modal-content">
+            <h2>Withdraw Funds</h2>
+            <input type="text" id="paypal-email" placeholder="Enter PayPal Email" required>
+            <input type="number" id="withdraw-amount" placeholder="Enter Amount" min="1" required>
+            <button id="confirm-withdraw">Confirm</button>
+            <button id="close-modal">Close</button>
+            <div id="info" style="margin-top: 10px; color: #333;">10,000 = $1</div>
+            <div id="error-message">Error message here</div> <!-- Mesaj de eroare -->
+            <div id="success-message">Withdrawal successful!</div> <!-- Mesaj de succes -->
         </div>
     </div>
 
     <script>
-        const predictions = [
-            "Both Teams To Score",
-            "1 - Home team win",
-            "2 - Away team win",
-            "X - Draw",
-            "2+ Goals",
-            "3+ Goals",
-            "Both Teams To Score OR 3+ Goals",
-            "Both Teams To Score AND 3+ Goals",
-            "1X - Home team win or Draw",
-            "X2 - Away team win or Draw",
-            "1+ Goal First Halftime",
-            "7+ Corners"
-        ];
+        // Setează balanța inițială la 100 dacă nu există o valoare salvată în localStorage
+        let userBalance = parseInt(localStorage.getItem('userBalance'), 10);
+        if (isNaN(userBalance)) {
+            userBalance = 100; // Balanță inițială
+            localStorage.setItem('userBalance', userBalance);
+        }
 
-        const activationKey = "bakozbet"; // Define the correct activation key
+        const balanceElement = document.getElementById('balance');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const startButton = document.getElementById('start-button');
+        const coinImage = document.getElementById('coin');
+        const withdrawButton = document.getElementById('withdraw-button');
+        const earnMoreButton = document.getElementById('earn-more-button');
+        const modal = document.getElementById('modal');
+        const closeModalButton = document.getElementById('close-modal');
+        const confirmWithdrawButton = document.getElementById('confirm-withdraw');
+        const paypalEmailInput = document.getElementById('paypal-email');
+        const withdrawAmountInput = document.getElementById('withdraw-amount');
+        const infoElement = document.getElementById('info');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Clear local storage for a fresh start only if history and cache don't already exist
-            if (!localStorage.getItem('history') && !localStorage.getItem('predictionCache')) {
-                localStorage.removeItem('history');
-                localStorage.removeItem('predictionCache');
-            }
-            
-            showWelcomePage();
+        // Actualizează balanța pe ecran
+        balanceElement.textContent = `Balance: ${userBalance}`;
+
+        startButton.addEventListener('click', () => {
+            welcomeScreen.style.display = 'none';
+            gameScreen.style.display = 'block';
         });
 
-        function showWelcomePage() {
-            document.getElementById('welcome-page').classList.add('active');
-            document.getElementById('main-page').classList.remove('active');
-            document.getElementById('history-page').classList.remove('active');
-        }
+        coinImage.addEventListener('click', () => {
+            userBalance += 1;
+            localStorage.setItem('userBalance', userBalance);
+            balanceElement.textContent = `Balance: ${userBalance}`;
+        });
 
-        function showMainPage() {
-            document.getElementById('welcome-page').classList.remove('active');
-            document.getElementById('main-page').classList.add('active');
-            document.getElementById('history-page').classList.remove('active');
-        }
-
-        function showHistoryPage() {
-            document.getElementById('welcome-page').classList.remove('active');
-            document.getElementById('main-page').classList.remove('active');
-            document.getElementById('history-page').classList.add('active');
-            loadHistory();
-        }
-
-        function activateApp() {
-            const enteredKey = document.getElementById('activation-key').value.trim();
-
-            if (enteredKey === activationKey) {
-                showMainPage();
-                document.getElementById('activation-error').style.display = 'none';
-            } else {
-                document.getElementById('activation-error').style.display = 'block';
+        withdrawButton.addEventListener('click', () => {
+            if (userBalance < 100) {
+                alert("Your balance is too low to withdraw. You need at least 100 to withdraw.");
+                return;
             }
-        }
+            modal.style.display = 'flex';
+            errorMessage.style.display = 'none'; // Ascunde mesajul de eroare atunci când modalul se deschide
+            successMessage.style.display = 'none'; // Ascunde mesajul de succes atunci când modalul se deschide
+        });
 
-        function predict() {
-            let team1 = document.getElementById('team1').value.trim().toLowerCase();
-            let team2 = document.getElementById('team2').value.trim().toLowerCase();
-            let resultElement = document.getElementById('result');
+        closeModalButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+            errorMessage.style.display = 'none'; // Ascunde mesajul de eroare când se închide modalul
+            successMessage.style.display = 'none'; // Ascunde mesajul de succes când se închide modalul
+        });
 
-            if (!team1 || !team2) {
-                resultElement.textContent = 'Error: Please enter both teams.';
+        confirmWithdrawButton.addEventListener('click', () => {
+            const email = paypalEmailInput.value.trim();
+            const amount = parseInt(withdrawAmountInput.value, 10);
+
+            if (!email || isNaN(amount) || amount <= 0) {
+                errorMessage.textContent = "Please enter a valid email and amount.";
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none'; // Ascunde mesajul de succes dacă este afișat
                 return;
             }
 
-            let matchKey = `${team1}-${team2}`;
-            let prediction;
-
-            let predictionCache = JSON.parse(localStorage.getItem('predictionCache')) || {};
-
-            if (predictionCache[matchKey]) {
-                prediction = predictionCache[matchKey];
-            } else {
-                prediction = predictions[Math.floor(Math.random() * predictions.length)];
-                predictionCache[matchKey] = prediction;
-                localStorage.setItem('predictionCache', JSON.stringify(predictionCache));
+            if (amount > userBalance) {
+                errorMessage.textContent = "Insufficient balance.";
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none'; // Ascunde mesajul de succes dacă este afișat
+                return;
             }
 
-            resultElement.textContent = `Prediction for ${team1.toUpperCase()} vs ${team2.toUpperCase()} -> ${prediction}`;
-            saveResult(team1, team2, prediction);
-        }
+            userBalance -= amount;
+            localStorage.setItem('userBalance', userBalance);
+            balanceElement.textContent = `Balance: ${userBalance}`;
+            successMessage.textContent = `Withdrawal successful! Sent $${amount / 10000} to ${email}`;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none'; // Ascunde mesajul de eroare dacă este afișat
+            setTimeout(() => {
+                modal.style.display = 'none';
+                successMessage.style.display = 'none'; // Ascunde mesajul de succes după închiderea modalului
+            }, 3000); // Ascunde mesajul după 3 secunde
+        });
 
-        function saveResult(team1, team2, prediction) {
-            let history = JSON.parse(localStorage.getItem('history')) || [];
-            history.push(`${team1.toUpperCase()} vs ${team2.toUpperCase()}: ${prediction}`);
-            localStorage.setItem('history', JSON.stringify(history));
-        }
-
-        function loadHistory() {
-            let history = JSON.parse(localStorage.getItem('history')) || [];
-            document.getElementById('history').textContent = history.length > 0 ? history.join('\n') : 'No history available.';
-        }
-
-        function deleteHistory() {
-            localStorage.removeItem('history');
-            document.getElementById('history').textContent = 'History deleted.';
-        }
+        earnMoreButton.addEventListener('click', () => {
+            alert("Earn More feature not implemented yet.");
+        });
     </script>
 </body>
 </html>
